@@ -1,6 +1,6 @@
 Class {
 	#name : #BaselineOfPharoStartupSettings,
-	#superclass : #Object,
+	#superclass : #BaselineOf,
 	#category : #BaselineOfPharoStartupSettings
 }
 
