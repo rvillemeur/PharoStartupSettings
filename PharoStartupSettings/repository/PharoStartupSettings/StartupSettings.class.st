@@ -87,15 +87,23 @@ StartupSettings >> gitSettings [
 						username: 'YOUR';
 						password: 'YOURGITHUBPASS';
 						yourself)."
+<<<<<<< HEAD
 			Iceberg showSystemRepositories: true.
 			IceRepository registry
 				detect: [ :each | each name = 'pharo' ]
 				ifFound: [ :repo | repo location: 'C:\devzone\devspace\iceberg' asFileReference ] ]
+=======
+			"Iceberg showSystemRepositories: true."
+			"IceRepository registry
+				detect: [ :each | each name = 'pharo' ]
+				ifFound: [ :repo | repo location: 'C:\devzone\devspace\iceberg' asFileReference ]" ]
+>>>>>>> 897be457e9ab9d33cf01eaeba64c5b2b3ba87da9
 		runOnce: true
 ]
 
 { #category : #'external projects' }
 StartupSettings >> loadArgentumProject [
+<<<<<<< HEAD
 	^ StartupAction
 		name: 'Argentum automatic loading'
 		code: [ Metacello new
@@ -103,14 +111,29 @@ StartupSettings >> loadArgentumProject [
 				repository: 'github://rvillemeur/argentum/repository';
 				load ]
 		runOnce: true
+=======
+^StartupAction name: 'Argentum automatic loading' code:  [
+Metacello new
+	baseline: 'Argentum';
+	repository: 'github://rvillemeur/argentum/repository';
+	load 
+]
+runOnce: true.
+>>>>>>> 897be457e9ab9d33cf01eaeba64c5b2b3ba87da9
 ]
 
 { #category : #'external projects' }
 StartupSettings >> loadRdvSettingsProject [
 	^ StartupAction
+<<<<<<< HEAD
 		name: 'Pharo startup Settings automatic loading'
 		code: [ Metacello new
 				baseline: 'Argentum';
+=======
+		name: 'Rdv Settings automatic loading'
+		code: [ Metacello new
+				baseline: 'PharoStartupSettings';
+>>>>>>> 897be457e9ab9d33cf01eaeba64c5b2b3ba87da9
 				repository: 'github://rvillemeur/PharoStartupSettings/repository';
 				load ]
 		runOnce: true
