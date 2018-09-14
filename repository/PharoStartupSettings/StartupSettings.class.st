@@ -73,12 +73,11 @@ StartupSettings >> gitSettings [
 				username: 'git';
 				publicKey: '/Users/YOUR/.ssh/id_rsa.pub';
 				privateKey: '/Users/YOUR/.ssh/id_rsa'."
-			"IceCredentialsProvider
-				plaintextCredentials:
-					(IcePlaintextCredentials new
-						username: 'YOUR';
-						password: 'YOURGITHUBPASS';
-						yourself)."
+			"IceCredentialStore current		storeCredential: (IcePlaintextCredentials new 
+			username: 'YOUR';
+			password: 'YOURGITHUBPASS';
+			host: 'github.com';
+			yourself)."
 			Iceberg showSystemRepositories: true.
 			IceRepository registry
 				detect: [ :each | each name = 'pharo' ]
@@ -102,7 +101,7 @@ StartupSettings >> loadRdvSettingsProject [
 	^ StartupAction
 		name: 'Pharo startup Settings automatic loading'
 		code: [ Metacello new
-				baseline: 'Argentum';
+				baseline: 'PharoStartupSettings';
 				repository: 'github://rvillemeur/PharoStartupSettings/repository';
 				load ]
 		runOnce: true
