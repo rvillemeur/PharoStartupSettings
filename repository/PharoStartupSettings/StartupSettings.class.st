@@ -14,13 +14,6 @@ Class {
 	#category : #PharoStartupSettings
 }
 
-{ #category : #'as yet unclassified' }
-StartupSettings class >> selectMethodCode: amethodName [
-	| method |
-	^method := self methodNamed: amethodName.
-	"^ method sourceCode"
-]
-
 { #category : #initialization }
 StartupSettings class >> setDefaultSettings [
 	| settingList |
@@ -31,7 +24,6 @@ StartupSettings class >> setDefaultSettings [
 			settingList sharePackageCacheDirectory.
 			settingList loadRdvSettingsProject.
 			settingList loadArgentumProject.
-			settingList loadDesignPatternProject.
 			settingList removeWelcomeWindow.
 			settingList setPersonnalName.
 			settingList defaultLightTheme.
