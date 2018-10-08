@@ -27,7 +27,8 @@ StartupSettings class >> setDefaultSettings [
 			settingList removeWelcomeWindow.
 			settingList setPersonnalName.
 			settingList defaultLightTheme.
-			settingList removePharoLogo}
+			settingList removePharoLogo.
+			settingList startTestRunnerOnSelectedPackage}
 
 
 ]
@@ -145,5 +146,17 @@ StartupSettings >> sharePackageCacheDirectory [
 				ensureCreateDirectory.
 			MCCacheRepository default directory: sharedPackageCacheDirectory.
 			MCDirectoryRepository defaultDirectoryName: 'C:\devzone\devspace' ]
+		runOnce: true
+]
+
+{ #category : #removing }
+StartupSettings >> startTestRunnerOnSelectedPackage [
+	^ StartupAction
+		name: 'Start Test Runner on selected package'
+		code: [ TestRunner new
+				packageSearchUpdate: 'Argentum';
+				selectAllPackages;
+				runAll;
+				open ]
 		runOnce: true
 ]
