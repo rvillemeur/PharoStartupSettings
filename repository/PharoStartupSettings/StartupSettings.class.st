@@ -20,14 +20,14 @@ StartupSettings class >> setDefaultSettings [
 	settingList := self new.
 	StartupPreferencesLoader default
 		addAtStartupInGeneralPreferenceFolder:
-			{settingList gitSettings.
-			settingList sharePackageCacheDirectory.
-			settingList loadRdvSettingsProject.
-			settingList loadArgentumProject.
-			settingList removeWelcomeWindow.
+			{settingList removeWelcomeWindow.
 			settingList setPersonnalName.
 			settingList defaultLightTheme.
 			settingList removePharoLogo.
+			settingList gitSettings.
+			settingList sharePackageCacheDirectory.
+			settingList loadRdvSettingsProject.
+			settingList loadArgentumProject.
 			settingList startTestRunnerOnSelectedPackage}
 
 
@@ -69,17 +69,13 @@ StartupSettings >> gitSettings [
 	^ StartupAction
 		name: 'git Settings'
 		code: [ Iceberg enableMetacelloIntegration: true.
-			IceCredentialsProvider useCustomSsh: true.
-			"IceCredentialsProvider sshCredentials
-				username: 'git';
-				publicKey: '/Users/YOUR/.ssh/id_rsa.pub';
-				privateKey: '/Users/YOUR/.ssh/id_rsa'."
-			"IceCredentialStore current		storeCredential: (IcePlaintextCredentials new 
-			username: 'YOUR';
-			password: 'YOURGITHUBPASS';
-			host: 'github.com';
-			yourself)."
-			Iceberg showSystemRepositories: true.
+			IceCredentialsProvider useCustomSsh: false.
+			IceCredentialsProvider sshCredentials
+				username: 'villemre';
+				publicKey: 'C:\devzone\renaud.pub';
+				privateKey: 'C:\devzone\renaud.ppk';
+				keyPassphrase: ''.
+			Iceberg showSystemRepositories: false.
 			IceRepository registry
 				detect: [ :each | each name = 'pharo' ]
 				ifFound: [ :repo | repo location: 'C:\devzone\devspace\iceberg' asFileReference ] ]
@@ -124,7 +120,7 @@ StartupSettings >> removeWelcomeWindow [
 	^StartupAction
 		name: 'remove welcome window'
 		code: [ World submorphs
-				select: [ :sm | sm isSystemWindow and: [ sm labelString = 'Welcome to Pharo6.1' ] ]
+				select: [ :sm | sm isSystemWindow and: [ sm labelString = ((Character value: 0) asString, 'Welcome') ] ]
 				thenDo: [ :window | window delete ] ]
 		runOnce: true
 ]
