@@ -28,6 +28,7 @@ StartupSettings class >> setDefaultSettings [
 			settingList sharePackageCacheDirectory.
 			settingList loadRdvSettingsProject.
 			settingList loadArgentumProject.
+			settingList startCalypsoBrowserOnSelectedPackage.
 			settingList startTestRunnerOnSelectedPackage}
 
 
@@ -142,6 +143,35 @@ StartupSettings >> sharePackageCacheDirectory [
 				ensureCreateDirectory.
 			MCCacheRepository default directory: sharedPackageCacheDirectory.
 			MCDirectoryRepository defaultDirectoryName: 'C:\devzone\devspace' ]
+		runOnce: true
+]
+
+{ #category : #removing }
+StartupSettings >> startCalypsoBrowserOnSelectedPackage [
+	^ StartupAction
+		name: 'Start Calypso on selected package'
+		code: [ | filter query scope browser |
+			filter := ClyItemNameFilter new pattern: (ClyRegexPattern with: 'argen').
+			scope := ClyNavigationEnvironment currentImageScope.
+			query := ClyFilterQuery for: (ClyAllPackages sortedFrom: scope) filter: filter.
+			query requiredResult: (ClySortedQueryResult using: ClySortByNameFunction ascending).
+			browser := ClyFullBrowser open.
+			browser packageView showQuery: query.
+			browser selectPackage: (query execute allItems at: 1) ]
+		runOnce: true
+]
+
+{ #category : #removing }
+StartupSettings >> startStaticFileWebServer [
+	^ StartupAction
+		name: 'Start static file web server'
+		code: [ (ZnServer startDefaultOn: 8080)
+				logToTranscript;
+				delegate:
+					(ZnStaticFileServerDelegate new
+						directory: 'C:\devzone\webgl' asFileReference;
+						mimeTypeExpirations: ZnStaticFileServerDelegate defaultMimeTypeExpirations;
+						yourself) ]
 		runOnce: true
 ]
 
