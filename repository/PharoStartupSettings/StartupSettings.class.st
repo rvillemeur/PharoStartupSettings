@@ -95,6 +95,17 @@ StartupSettings >> loadArgentumProject [
 ]
 
 { #category : #'external projects' }
+StartupSettings >> loadProjectSelectorProject [
+	^ StartupAction
+		name: 'Project Selector loading'
+		code: [ Metacello new
+				baseline: 'ProjectSelector';
+				repository: 'github://rvillemeur/project-selector/src';
+				load ]
+		runOnce: true
+]
+
+{ #category : #'external projects' }
 StartupSettings >> loadRdvSettingsProject [
 	^ StartupAction
 		name: 'Pharo startup Settings automatic loading'
