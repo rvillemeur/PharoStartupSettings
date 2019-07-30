@@ -26,12 +26,7 @@ StartupSettings class >> setDefaultSettings [
 			settingList removePharoLogo.
 			settingList gitSettings.
 			settingList sharePackageCacheDirectory.
-			settingList loadRdvSettingsProject.
-			settingList loadArgentumProject.
-			settingList startCalypsoBrowserOnSelectedPackage.
-			settingList startTestRunnerOnSelectedPackage}
-
-
+			settingList loadProjectSelectorProject}
 ]
 
 { #category : #'look&feel' }
@@ -101,7 +96,8 @@ StartupSettings >> loadProjectSelectorProject [
 		code: [ Metacello new
 				baseline: 'ProjectSelector';
 				repository: 'github://rvillemeur/project-selector/src';
-				load ]
+				load.
+			ProjectSelector new open ]
 		runOnce: true
 ]
 
@@ -164,7 +160,7 @@ StartupSettings >> startCalypsoBrowserOnSelectedPackage [
 		code: [ | filter query scope browser |
 			filter := ClyItemNameFilter new pattern: (ClyRegexPattern with: 'argen').
 			scope := ClyNavigationEnvironment currentImageScope.
-			query := ClyFilterQuery for: (ClyAllPackages sortedFrom: scope) filter: filter.
+			query := ClyFilterQuery for: (ClyAllPackagesQuery sortedFrom: scope) filter: filter.
 			query requiredResult: (ClySortedQueryResult using: ClySortByNameFunction ascending).
 			browser := ClyFullBrowser open.
 			browser packageView showQuery: query.
