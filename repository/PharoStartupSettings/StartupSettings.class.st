@@ -97,7 +97,7 @@ StartupSettings >> loadProjectSelectorProject [
 				baseline: 'ProjectSelector';
 				repository: 'github://rvillemeur/project-selector/src';
 				load.
-			ProjectSelector new open ]
+			ProjectSelector open ]
 		runOnce: true
 ]
 
