@@ -7,6 +7,19 @@ Settings can then be deployed to the General Preference folder with a command li
 
 and then tested with
 ""StartupPreferencesLoader default loadFromDefaultLocations.""
+
+To quit without saving, you have 2 steps on windows:
+In Pharo.ini, add the line 'EnableAltF4Quit=0'
+Then, in setting, include 'closeWithoutSaving'
+
+Other usefull settings in Pharo.ini:
+ImageFile=""C:\devzone\pharo7-32\Pharo7.0.3-0-32bit-0903ade.image""
+RunSingleApp=1
+QuitDialogLabel=""fermeture""
+QuitDialogMessage=""Quitter Pharo ?""
+EnableAltF4Quit=0 
+UseOpenGL=1
+
 "
 Class {
 	#name : #StartupSettings,
@@ -21,6 +34,7 @@ StartupSettings class >> setDefaultSettings [
 	StartupPreferencesLoader default
 		addAtStartupInGeneralPreferenceFolder:
 			{settingList removeWelcomeWindow.
+			settingList closeWithoutSaving.
 			settingList setPersonnalName.
 			settingList defaultLightTheme.
 			settingList removePharoLogo.
@@ -52,6 +66,15 @@ StartupSettings >> changeSyntaxDefault [
 		name: 'change default syntax settings'
 		code: [ "TextEditorDialogWindow autoAccept: true."
 			SHPreferences setStyleTableNamed: 'Solarized' ]
+		runOnce: true
+]
+
+{ #category : #'look&feel' }
+StartupSettings >> closeWithoutSaving [
+	^ StartupAction
+		name: 'default to light theme'
+		code: [ WorldState class
+				compile: 'quitSession ^ Smalltalk snapshot: false andQuit: true' ]
 		runOnce: true
 ]
 
