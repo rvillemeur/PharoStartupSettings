@@ -72,7 +72,7 @@ StartupSettings >> changeSyntaxDefault [
 { #category : #'look&feel' }
 StartupSettings >> closeWithoutSaving [
 	^ StartupAction
-		name: 'default to light theme'
+		name: 'close without saving'
 		code: [ WorldState class
 				compile: 'quitSession ^ Smalltalk snapshot: false andQuit: true' ]
 		runOnce: true
@@ -80,7 +80,10 @@ StartupSettings >> closeWithoutSaving [
 
 { #category : #'look&feel' }
 StartupSettings >> defaultLightTheme [
-	^StartupAction name: 'default to light theme' code: [ PharoLightTheme beCurrent ] runOnce: true
+	^ StartupAction
+		name: 'default to light theme'
+		code: [ PharoLightTheme beCurrent ]
+		runOnce: true
 ]
 
 { #category : #removing }
