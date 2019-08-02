@@ -34,10 +34,10 @@ StartupSettings class >> setDefaultSettings [
 	StartupPreferencesLoader default
 		addAtStartupInGeneralPreferenceFolder:
 			{settingList removeWelcomeWindow.
-			settingList closeWithoutSaving.
 			settingList setPersonnalName.
 			settingList defaultLightTheme.
 			settingList removePharoLogo.
+			settingList closeWithoutSaving.
 			settingList gitSettings.
 			settingList sharePackageCacheDirectory.
 			settingList loadProjectSelectorProject}
