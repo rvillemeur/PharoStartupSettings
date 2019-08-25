@@ -116,6 +116,28 @@ StartupSettings >> loadArgentumProject [
 ]
 
 { #category : #'external projects' }
+StartupSettings >> loadMirageWindowManagement [
+	^ StartupAction
+		name: 'load mirage window management'
+		code: [ Metacello new
+	repository: 'github://JulienDelplanque/Mirage:v2.1.0/src';
+	baseline: 'Mirage';
+	load. MIModel install:true. ]
+		runOnce: true
+]
+
+{ #category : #'external projects' }
+StartupSettings >> loadPomodoroTimer [
+	^ StartupAction
+		name: 'load pomodoro timer'
+		code: [ Metacello new
+				repository: 'github://astares/Pharo-Pomodoro/src';
+				baseline: 'Pomodoro';
+				load ]
+		runOnce: true
+]
+
+{ #category : #'external projects' }
 StartupSettings >> loadProjectSelectorProject [
 	^ StartupAction
 		name: 'Project Selector loading'
