@@ -40,6 +40,8 @@ StartupSettings class >> setDefaultSettings [
 			settingList closeWithoutSaving.
 			settingList gitSettings.
 			settingList sharePackageCacheDirectory.
+			settingList loadMirageWindowManagement.
+			settingList loadPomodoroTimer.
 			settingList loadProjectSelectorProject}
 ]
 
@@ -120,9 +122,10 @@ StartupSettings >> loadMirageWindowManagement [
 	^ StartupAction
 		name: 'load mirage window management'
 		code: [ Metacello new
-	repository: 'github://JulienDelplanque/Mirage:v2.1.0/src';
-	baseline: 'Mirage';
-	load. MIModel install:true. ]
+				repository: 'github://JulienDelplanque/Mirage:v2.1.0/src';
+				baseline: 'Mirage';
+				load.
+			MIModel install: true ]
 		runOnce: true
 ]
 
