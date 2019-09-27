@@ -93,6 +93,7 @@ StartupSettings >> gitSettings [
 	^ StartupAction
 		name: 'git Settings'
 		code: [ Iceberg enableMetacelloIntegration: true.
+			Iceberg remoteTypeSelector: #httpsUrl.
 			IceCredentialsProvider useCustomSsh: false.
 			IceCredentialsProvider sshCredentials
 				username: 'villemre';
