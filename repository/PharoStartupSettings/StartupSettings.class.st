@@ -93,17 +93,7 @@ StartupSettings >> gitSettings [
 	^ StartupAction
 		name: 'git Settings'
 		code: [ Iceberg enableMetacelloIntegration: true.
-			Iceberg remoteTypeSelector: #httpsUrl.
-			IceCredentialsProvider useCustomSsh: false.
-			IceCredentialsProvider sshCredentials
-				username: 'villemre';
-				publicKey: 'C:\devzone\renaud.pub';
-				privateKey: 'C:\devzone\renaud.ppk';
-				keyPassphrase: ''.
-			Iceberg showSystemRepositories: false.
-			IceRepository registry
-				detect: [ :each | each name = 'pharo' ]
-				ifFound: [ :repo | repo location: 'C:\devzone\devspace\iceberg' asFileReference ] ]
+			Iceberg remoteTypeSelector: #httpsUrl.]
 		runOnce: true
 ]
 
