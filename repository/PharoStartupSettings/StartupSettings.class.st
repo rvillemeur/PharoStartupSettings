@@ -186,7 +186,7 @@ StartupSettings >> sharePackageCacheDirectory [
 			MCDirectoryRepository defaultDirectoryName: 'C:\devzone\devspace'.
 			IceLibgitRepository shareRepositoriesBetweenImages: true.
 			IceLibgitRepository defaultCodeSubdirectory: 'C:\devzone\devspace'.
-			IceLibgitRepository sharedRepositoriesLocation: 'C:\devzone\devspace'.
+			IceLibgitRepository sharedRepositoriesLocation: sharedPackageCacheDirectory.
 			GTPlayBook defaultCacheDirectory: sharedPackageCacheDirectory.
 			GTPlayBook defaultStashDirectory: sharedPackageCacheDirectory ]
 		runOnce: true
