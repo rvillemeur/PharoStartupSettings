@@ -41,7 +41,6 @@ StartupSettings class >> setDefaultSettings [
 			settingList gitSettings.
 			settingList sharePackageCacheDirectory.
 			settingList loadMirageWindowManagement.
-			settingList loadPomodoroTimer.
 			settingList loadProjectSelectorProject}
 ]
 
@@ -180,12 +179,11 @@ StartupSettings >> sharePackageCacheDirectory [
 	^ StartupAction
 		name: 'Share package cache directory'
 		code: [ | sharedPackageCacheDirectory |
-			sharedPackageCacheDirectory := 'C:\devzone\devspace'
-				asFileReference ensureCreateDirectory.
+			sharedPackageCacheDirectory := (FileLocator home / 'devzone' / 'devspace') asFileReference  ensureCreateDirectory.
 			MCCacheRepository default directory: sharedPackageCacheDirectory.
-			MCDirectoryRepository defaultDirectoryName: 'C:\devzone\devspace'.
+			MCDirectoryRepository defaultDirectoryName: sharedPackageCacheDirectory pathString .
 			IceLibgitRepository shareRepositoriesBetweenImages: true.
-			IceLibgitRepository defaultCodeSubdirectory: 'C:\devzone\devspace'.
+			IceLibgitRepository defaultCodeSubdirectory: sharedPackageCacheDirectory pathString.
 			IceLibgitRepository sharedRepositoriesLocation: sharedPackageCacheDirectory.
 			GTPlayBook defaultCacheDirectory: sharedPackageCacheDirectory.
 			GTPlayBook defaultStashDirectory: sharedPackageCacheDirectory ]
