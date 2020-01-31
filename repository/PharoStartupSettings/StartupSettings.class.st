@@ -46,14 +46,6 @@ StartupSettings class >> setDefaultSettings [
 ]
 
 { #category : #'look&feel' }
-StartupSettings >> changeDebuggerDefault [
-	^StartupAction
-		name: 'change debugger default'
-		code: [ GTGenericStackDebugger alwaysOpenFullDebugger: true ]
-		runOnce: true
-]
-
-{ #category : #'look&feel' }
 StartupSettings >> changeDefaultFont [
 	^StartupAction
 		name: 'change default font'
@@ -188,10 +180,15 @@ StartupSettings >> sharePackageCacheDirectory [
 	^ StartupAction
 		name: 'Share package cache directory'
 		code: [ | sharedPackageCacheDirectory |
-			sharedPackageCacheDirectory := 'C:\devzone\devspace' asFileReference
-				ensureCreateDirectory.
+			sharedPackageCacheDirectory := 'C:\devzone\devspace'
+				asFileReference ensureCreateDirectory.
 			MCCacheRepository default directory: sharedPackageCacheDirectory.
-			MCDirectoryRepository defaultDirectoryName: 'C:\devzone\devspace' ]
+			MCDirectoryRepository defaultDirectoryName: 'C:\devzone\devspace'.
+			IceLibgitRepository shareRepositoriesBetweenImages: true.
+			IceLibgitRepository defaultCodeSubdirectory: 'C:\devzone\devspace'.
+			IceLibgitRepository sharedRepositoriesLocation: 'C:\devzone\devspace'.
+			GTPlayBook defaultCacheDirectory: sharedPackageCacheDirectory.
+			GTPlayBook defaultStashDirectory: sharedPackageCacheDirectory ]
 		runOnce: true
 ]
 
