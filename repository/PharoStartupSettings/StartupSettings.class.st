@@ -41,6 +41,7 @@ StartupSettings class >> setDefaultSettings [
 			settingList gitSettings.
 			settingList sharePackageCacheDirectory.
 			settingList loadMirageWindowManagement.
+			settingList loadVistaCursor.
 			settingList loadProjectSelectorProject}
 ]
 
@@ -141,6 +142,17 @@ StartupSettings >> loadRdvSettingsProject [
 		code: [ Metacello new
 				baseline: 'PharoStartupSettings';
 				repository: 'github://rvillemeur/PharoStartupSettings/repository';
+				load ]
+		runOnce: true
+]
+
+{ #category : #'external projects' }
+StartupSettings >> loadVistaCursor [
+	^ StartupAction
+		name: 'load vista cursor'
+		code: [ Metacello new
+				repository: 'github://astares/Pharo-VistaCursors/src';
+				baseline: 'VistaCursors';
 				load ]
 		runOnce: true
 ]
