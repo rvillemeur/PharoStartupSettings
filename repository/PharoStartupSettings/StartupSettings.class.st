@@ -35,6 +35,7 @@ StartupSettings class >> setDefaultSettings [
 		addAtStartupInGeneralPreferenceFolder:
 			{settingList removeWelcomeWindow.
 			settingList setPersonnalName.
+			settingList loadCozySettings.
 			settingList defaultLightTheme.
 			settingList removePharoLogo.
 			settingList closeWithoutSaving.
@@ -96,6 +97,17 @@ StartupSettings >> loadArgentumProject [
 		code: [ Metacello new
 				baseline: 'Argentum';
 				repository: 'github://rvillemeur/argentum/repository';
+				load ]
+		runOnce: true
+]
+
+{ #category : #'external projects' }
+StartupSettings >> loadCozySettings [
+	^ StartupAction
+		name: 'load cozy settings'
+		code: [ Metacello new
+				baseline: 'Cozy';
+				repository: 'github://Ducasse/Cozy/tree/master/src';
 				load ]
 		runOnce: true
 ]
