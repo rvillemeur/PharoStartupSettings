@@ -35,7 +35,8 @@ StartupSettings class >> setDefaultSettings [
 		addAtStartupInGeneralPreferenceFolder:
 			{settingList removeWelcomeWindow.
 			settingList setPersonnalName.
-			settingList loadCozySettings.
+			settingList userLocalDirectory.
+			settingList previewWindow.
 			settingList defaultLightTheme.
 			settingList removePharoLogo.
 			settingList closeWithoutSaving.
@@ -165,7 +166,16 @@ StartupSettings >> loadVistaCursor [
 		code: [ Metacello new
 				repository: 'github://astares/Pharo-VistaCursors/src';
 				baseline: 'VistaCursors';
-				load ]
+				load. 
+				VistaCursorSettings cursorScaleFactor:2 ]
+		runOnce: true
+]
+
+{ #category : #removing }
+StartupSettings >> previewWindow [
+	^ StartupAction
+		name: 'remove preview window'
+		code: [TaskbarMorph showWindowPreview: false]
 		runOnce: true
 ]
 
@@ -252,5 +262,13 @@ StartupSettings >> startTestRunnerOnSelectedPackage [
 				selectAllPackages;
 				runAll;
 				open ]
+		runOnce: true
+]
+
+{ #category : #removing }
+StartupSettings >> userLocalDirectory [
+	^ StartupAction
+		name: 'set user local directory (for saving code)'
+		code: [SystemResolver userLocalDirectory: FileLocator home / 'devzone']
 		runOnce: true
 ]
