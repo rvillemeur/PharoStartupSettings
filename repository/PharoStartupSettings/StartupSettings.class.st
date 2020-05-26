@@ -87,7 +87,13 @@ StartupSettings >> gitSettings [
 	^ StartupAction
 		name: 'git Settings'
 		code: [ Iceberg enableMetacelloIntegration: true.
-			Iceberg remoteTypeSelector: #httpsUrl.]
+			Iceberg remoteTypeSelector: #scpUrl.
+			IceCredentialsProvider useCustomSsh: true.
+			IceCredentialsProvider sshCredentials
+				username: 'user';
+				publicKey: 'C:\Users\villemre\devzone\ssh\id_rsa.pub';
+				privateKey: 'C:\Users\villemre\devzone\ssh\id_rsa';
+				keyPassphrase: ''. ]
 		runOnce: true
 ]
 
