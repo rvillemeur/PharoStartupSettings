@@ -1,25 +1,29 @@
 "
 A small class to organize all the settings that can be defined at startup.
+
 This allow the organization of settings as code, instead of STON settings file, so we can test it from version to version.
 
 Settings can then be deployed to the General Preference folder with a command like:
-""StartupSettings setDefaultSettings""
-
+[[[
+StartupSettings setDefaultSettings
+]]]
 and then tested with
-""StartupPreferencesLoader default loadFromDefaultLocations.""
 
+[[[
+StartupPreferencesLoader default loadFromDefaultLocations
+]]]
+!!windows specific settings
 To quit without saving, you have 2 steps on windows:
-In Pharo.ini, add the line 'EnableAltF4Quit=0'
-Then, in setting, include 'closeWithoutSaving'
+# In """"Pharo.ini"""", add the line ''EnableAltF4Quit=0''
+#  in setting, include ''closeWithoutSaving''
 
-Other usefull settings in Pharo.ini:
-ImageFile=""C:\devzone\pharo7-32\Pharo7.0.3-0-32bit-0903ade.image""
-RunSingleApp=1
-QuitDialogLabel=""fermeture""
-QuitDialogMessage=""Quitter Pharo ?""
-EnableAltF4Quit=0 
-UseOpenGL=1
-
+Other usefull settings one can put in """"Pharo.ini"""":
+==ImageFile=""C:\devzone\pharo7-32\Pharo7.0.3-0-32bit-0903ade.image""
+==RunSingleApp=1
+==QuitDialogLabel=""fermeture""
+==QuitDialogMessage=""Quitter Pharo ?""
+==EnableAltF4Quit=0 
+==UseOpenGL=1
 "
 Class {
 	#name : #StartupSettings,
