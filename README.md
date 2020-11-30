@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # PharoStartupSettings
 =======
 Settings configuration to customize pharo automatically at startup:
@@ -17,4 +17,3 @@ To deploy them, run
 ```smalltalk
   StartupSettings setDefaultSettings
 ```
->>>>>>> 897be457e9ab9d33cf01eaeba64c5b2b3ba87da9
