@@ -52,11 +52,15 @@ StartupSettings class >> setDefaultSettings [
 
 { #category : #'look&feel' }
 StartupSettings >> changeDefaultFont [
-	^StartupAction
-		name: 'change default font'
-		code: [ StandardFonts defaultFont: (LogicalFont familyName: 'Consolas' pointSize: 10).
-			GraphicFontSettings resetAllFontToDefault ]
-		runOnce: true
+
+	^ StartupAction
+		  name: 'change default font'
+		  code: [ 
+			  FreeTypeSettings updateFontsAtImageStartup: true.
+			  StandardFonts defaultFont:
+				  (LogicalFont familyName: 'Consolas' pointSize: 10).
+			  GraphicFontSettings resetAllFontToDefault ]
+		  runOnce: true
 ]
 
 { #category : #'look&feel' }
