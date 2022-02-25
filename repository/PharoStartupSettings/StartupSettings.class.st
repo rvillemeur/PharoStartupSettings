@@ -38,6 +38,7 @@ StartupSettings class >> setDefaultSettings [
 	StartupPreferencesLoader default
 		addAtStartupInGeneralPreferenceFolder:
 			{settingList removeWelcomeWindow.
+			settingList changeDefaultFont.
 			settingList setPersonnalName.
 			settingList userLocalDirectory.
 			settingList previewWindow.
@@ -46,8 +47,6 @@ StartupSettings class >> setDefaultSettings [
 			settingList closeWithoutSaving.
 			settingList gitSettings.
 			settingList sharePackageCacheDirectory.
-			settingList loadMirageWindowManagement.
-			settingList loadVistaCursor.
 			settingList loadProjectSelectorProject}
 ]
 
@@ -95,8 +94,8 @@ StartupSettings >> gitSettings [
 			IceCredentialsProvider useCustomSsh: true.
 			IceCredentialsProvider sshCredentials
 				username: 'user';
-				publicKey: 'C:\Users\villemre\devzone\ssh\id_rsa.pub';
-				privateKey: 'C:\Users\villemre\devzone\ssh\id_rsa';
+				publicKey: 'C:\devzone\ssh\id_rsa.pub';
+				privateKey: 'C:\devzone\ssh\id_rsa';
 				keyPassphrase: ''. ]
 		runOnce: true
 ]
@@ -169,18 +168,6 @@ StartupSettings >> loadRdvSettingsProject [
 		runOnce: true
 ]
 
-{ #category : #'external projects' }
-StartupSettings >> loadVistaCursor [
-	^ StartupAction
-		name: 'load vista cursor'
-		code: [ Metacello new
-				repository: 'github://astares/Pharo-VistaCursors/src';
-				baseline: 'VistaCursors';
-				load. 
-				VistaCursorSettings cursorScaleFactor:2 ]
-		runOnce: true
-]
-
 { #category : #removing }
 StartupSettings >> previewWindow [
 	^ StartupAction
@@ -220,18 +207,23 @@ StartupSettings >> setPersonnalName [
 
 { #category : #initialization }
 StartupSettings >> sharePackageCacheDirectory [
+
 	^ StartupAction
-		name: 'Share package cache directory'
-		code: [ | sharedPackageCacheDirectory |
-			sharedPackageCacheDirectory := (FileLocator home / 'devzone' / 'devspace') asFileReference  ensureCreateDirectory.
-			MCCacheRepository default directory: sharedPackageCacheDirectory.
-			MCDirectoryRepository defaultDirectoryName: sharedPackageCacheDirectory pathString .
-			IceLibgitRepository shareRepositoriesBetweenImages: true.
-			IceLibgitRepository defaultCodeSubdirectory: sharedPackageCacheDirectory pathString.
-			IceLibgitRepository sharedRepositoriesLocation: sharedPackageCacheDirectory.
-			GTPlayBook defaultCacheDirectory: sharedPackageCacheDirectory.
-			GTPlayBook defaultStashDirectory: sharedPackageCacheDirectory ]
-		runOnce: true
+		  name: 'Share package cache directory'
+		  code: [ 
+			  | sharedPackageCacheDirectory |
+			  sharedPackageCacheDirectory := (FileLocator home / 'devzone'
+			                                  / 'devspace') asFileReference
+				                                 ensureCreateDirectory.
+			  MCCacheRepository default directory: sharedPackageCacheDirectory.
+			  MCDirectoryRepository defaultDirectoryName:
+				  sharedPackageCacheDirectory pathString.
+			  IceLibgitRepository shareRepositoriesBetweenImages: true.
+			  IceLibgitRepository defaultCodeSubdirectory:
+				  sharedPackageCacheDirectory pathString.
+			  IceLibgitRepository sharedRepositoriesLocation:
+				  sharedPackageCacheDirectory ]
+		  runOnce: true
 ]
 
 { #category : #removing }
