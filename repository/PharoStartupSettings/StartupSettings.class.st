@@ -57,9 +57,16 @@ StartupSettings >> changeDefaultFont [
 		  name: 'change default font'
 		  code: [ 
 			  FreeTypeSettings updateFontsAtImageStartup: true.
+			  FreeTypeFontProvider current updateFromSystem.
 			  StandardFonts defaultFont:
-				  (LogicalFont familyName: 'Consolas' pointSize: 10).
-			  GraphicFontSettings resetAllFontToDefault ]
+				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 10).
+			  GraphicFontSettings resetAllFontToDefault.
+			  StandardFonts windowTitleFont:
+				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 11).
+			  StandardFonts haloFont:
+				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 9).
+			  StandardFonts balloonFont:
+				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 9) ]
 		  runOnce: true
 ]
 
@@ -172,6 +179,19 @@ StartupSettings >> loadRdvSettingsProject [
 		runOnce: true
 ]
 
+{ #category : #'external projects' }
+StartupSettings >> loadVectorGraphicsProject [
+
+	^ StartupAction
+		  name: 'load vector graphics code'
+		  code: [ 
+			  Metacello new
+				  baseline: 'VectorGraphics';
+				  repository: 'gitlocal:///c:\devzone\sources\VectorGraphics\src';
+				  load ]
+		  runOnce: true
+]
+
 { #category : #removing }
 StartupSettings >> previewWindow [
 	^ StartupAction
@@ -268,6 +288,62 @@ StartupSettings >> startTestRunnerOnSelectedPackage [
 				selectAllPackages;
 				runAll;
 				open ]
+		runOnce: true
+]
+
+{ #category : #'look&feel' }
+StartupSettings >> updateDPIAppearance [
+"note: this may be fixed in future version of pharo"
+	^ StartupAction
+		  name: 'update dpi appearance'
+		  code: [ 
+			  OSSDL2BackendWindow compile: 'fetchDPI
+	| displayIndex ddpi hdpi vdpi newDiagonalDPI newScreenScaleFactor |
+	"In OS X disable the computation of a DPI based scale factor. These values
+	are completely wrong and we are getting scale factors that are very large
+	even in non-retina display. This workaround does not affect the support for
+	retina display because that is handled by fetching the size of the drawing surface."
+	Smalltalk os isMacOSX ifTrue: [ 
+		diagonalDPI := verticalDPI := horizontalDPI := self screenScaleFactorBaseDPI.
+		screenScaleFactor := 1.0.
+		^ false
+	].
+
+	displayIndex := sdl2Window getDisplayIndex.
+	displayIndex < 0 ifTrue: [ ^ false ].
+	
+	ddpi := ByteArray new: 4.
+	hdpi := ByteArray new: 4.
+	vdpi := ByteArray new: 4.
+	(SDL2 getDisplay: displayIndex ddpi: ddpi hdpi: hdpi vdpi: vdpi) = 0 ifFalse: [ ^ false ].
+	
+ 	ddpi floatAt: 1 put: 96.0.
+	ddpi floatAt: 1 put: 96.0.
+	ddpi floatAt: 1 put: 96.0.
+	
+	newDiagonalDPI := ddpi floatAt: 1.
+	"Allow automatic scale of factor increments of 5%. We need to
+	round due to precision issues which may result in an almost 1 scale factor, but not exactly one.
+	This has to be at least a divisor of 25% which are normal scale factor increments that are selectable in Windows.
+	"
+	newScreenScaleFactor := newDiagonalDPI / self screenScaleFactorBaseDPI roundTo: 0.05.
+	(screenScaleFactor closeTo: newScreenScaleFactor) ifTrue: [ ^ false ].
+
+	horizontalDPI := hdpi floatAt: 1.
+	verticalDPI := vdpi floatAt: 1.
+	diagonalDPI := newDiagonalDPI.
+	screenScaleFactor := newScreenScaleFactor.
+	^ true'.
+	
+	WorldMorph scaleFactor: 3.0. ]
+		  runOnce: true
+]
+
+{ #category : #removing }
+StartupSettings >> updateFont [
+	^StartupAction
+		name: 'update system fonts at startup'
+		code: [ FreeTypeFontProvider current updateFromSystem ]
 		runOnce: true
 ]
 
