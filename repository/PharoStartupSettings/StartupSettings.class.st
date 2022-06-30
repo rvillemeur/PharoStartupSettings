@@ -293,7 +293,8 @@ StartupSettings >> startTestRunnerOnSelectedPackage [
 
 { #category : #'look&feel' }
 StartupSettings >> updateDPIAppearance [
-"note: this may be fixed in future version of pharo"
+"note: this may be fixed in future version of pharo
+source taken from https://github.com/pharo-project/pharo/issues/9715"
 	^ StartupAction
 		  name: 'update dpi appearance'
 		  code: [ 
