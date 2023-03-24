@@ -295,7 +295,7 @@ StartupSettings >> removeWelcomeWindow [
 		  code: [
 			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
 				  ifTrue: [
-					  World submorphs
+					  self currentWorld  submorphs
 						  select: [ :sm |
 							  sm isSystemWindow and: [
 								  sm labelString = ((Character value: 0) asString , 'Welcome') ] ]
