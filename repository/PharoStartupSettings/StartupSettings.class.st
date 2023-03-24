@@ -38,6 +38,9 @@ StartupSettings class >> setDefaultSettings [
 	StartupPreferencesLoader default
 		addAtStartupInGeneralPreferenceFolder:
 			{settingList removeWelcomeWindow.
+			settingList maximizePharoWindow.
+			settingList scaleGuiToolkit.
+			settingList updateFont.
 			settingList changeDefaultFont.
 			settingList setPersonnalName.
 			settingList userLocalDirectory.
@@ -46,7 +49,8 @@ StartupSettings class >> setDefaultSettings [
 			settingList removePharoLogo.
 			settingList closeWithoutSaving.
 			settingList gitSettings.
-			settingList sharePackageCacheDirectory.
+			settingList loadGToolkitNote.
+			settingList loadPharoGraphicsNote.
 			settingList loadProjectSelectorProject}
 ]
 
@@ -55,18 +59,20 @@ StartupSettings >> changeDefaultFont [
 
 	^ StartupAction
 		  name: 'change default font'
-		  code: [ 
-			  FreeTypeSettings updateFontsAtImageStartup: true.
-			  FreeTypeFontProvider current updateFromSystem.
-			  StandardFonts defaultFont:
-				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 10).
-			  GraphicFontSettings resetAllFontToDefault.
-			  StandardFonts windowTitleFont:
-				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 11).
-			  StandardFonts haloFont:
-				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 9).
-			  StandardFonts balloonFont:
-				  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 9) ]
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [
+					  FreeTypeSettings updateFontsAtImageStartup: true.
+					  FreeTypeFontProvider current updateFromSystem.
+					  StandardFonts defaultFont:
+						  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 10).
+					  GraphicFontSettings resetAllFontToDefault.
+					  StandardFonts windowTitleFont:
+						  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 11).
+					  StandardFonts haloFont:
+						  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 9).
+					  StandardFonts balloonFont:
+						  (LogicalFont familyName: 'Cascadia Code PL' pointSize: 9) ] ]
 		  runOnce: true
 ]
 
@@ -81,34 +87,54 @@ StartupSettings >> changeSyntaxDefault [
 
 { #category : #'look&feel' }
 StartupSettings >> closeWithoutSaving [
+
 	^ StartupAction
-		name: 'close without saving'
-		code: [ WorldState class
-				compile: 'quitSession ^ Smalltalk snapshot: false andQuit: true' ]
-		runOnce: true
+		  name: 'close without saving'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [
+					  WorldState class compile:
+						  'quitSession ^ Smalltalk snapshot: false andQuit: true' ] ]
+		  runOnce: true
 ]
 
 { #category : #'look&feel' }
 StartupSettings >> defaultLightTheme [
+
 	^ StartupAction
-		name: 'default to light theme'
-		code: [ PharoLightTheme beCurrent ]
-		runOnce: true
+		  name: 'default to light theme'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [ PharoLightTheme beCurrent ] ]
+		  runOnce: true
 ]
 
 { #category : #removing }
 StartupSettings >> gitSettings [
+
 	^ StartupAction
-		name: 'git Settings'
-		code: [ Iceberg enableMetacelloIntegration: true.
-			Iceberg remoteTypeSelector: #scpUrl.
-			IceCredentialsProvider useCustomSsh: true.
-			IceCredentialsProvider sshCredentials
-				username: 'user';
-				publicKey: 'C:\devzone\ssh\id_rsa.pub';
-				privateKey: 'C:\devzone\ssh\id_rsa';
-				keyPassphrase: ''. ]
-		runOnce: true
+		  name: 'git Settings'
+		  code: [
+			  | credentials store |
+			  Iceberg enableMetacelloIntegration: true.
+			  Iceberg remoteTypeSelector: #scpUrl.
+			  credentials := IceSshCredentials new
+				                 host: #*;
+				                 username: 'git';
+				                 publicKey:
+					                 (FileLocator home / '.ssh/id_ed25519.pub')
+						                 pathString;
+				                 privateKey:
+					                 (FileLocator home / '.ssh/id_ed25519')
+						                 pathString;
+				                 keyPassphrase: '';
+				                 yourself.
+			  store := IceCredentialStore current.
+			  store
+				  storeSshCredential: credentials
+				  forHostname: credentials host.
+			  IceCredentialsProvider useCustomSsh: true ]
+		  runOnce: true
 ]
 
 { #category : #'external projects' }
@@ -134,6 +160,18 @@ StartupSettings >> loadCozySettings [
 ]
 
 { #category : #'external projects' }
+StartupSettings >> loadGToolkitNote [
+	^ StartupAction
+		name: 'load gtoolkit note'
+		code: [ SmalltalkImage current shortImageName = 'GlamorousToolkit.image'
+				  ifTrue: [Metacello new                   
+    baseline: 'RdvNote';                                                             
+    repository: 'github://rvillemeur/misk_notes/src';                                
+    load. ]]
+		runOnce: true
+]
+
+{ #category : #'external projects' }
 StartupSettings >> loadMirageWindowManagement [
 	^ StartupAction
 		name: 'load mirage window management'
@@ -143,6 +181,21 @@ StartupSettings >> loadMirageWindowManagement [
 				load.
 			MIModel install: true ]
 		runOnce: true
+]
+
+{ #category : #'external projects' }
+StartupSettings >> loadPharoGraphicsNote [
+
+	^ StartupAction
+		  name: 'load pharo graphics note'
+		  code: [
+			  SmalltalkImage current shortImageName = 'GlamorousToolkit.image'
+				  ifTrue: [
+					  Metacello new
+						  baseline: 'PharoGraphics';
+						  repository: 'github://rvillemeur/PharoGraphics/src';
+						  load ] ]
+		  runOnce: true
 ]
 
 { #category : #'external projects' }
@@ -158,14 +211,18 @@ StartupSettings >> loadPomodoroTimer [
 
 { #category : #'external projects' }
 StartupSettings >> loadProjectSelectorProject [
+
 	^ StartupAction
-		name: 'Project Selector loading'
-		code: [ Metacello new
-				baseline: 'ProjectSelector';
-				repository: 'github://rvillemeur/project-selector/src';
-				load.
-			ProjectSelector open ]
-		runOnce: true
+		  name: 'Project Selector loading'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [
+					  Metacello new
+						  baseline: 'ProjectSelector';
+						  repository: 'github://rvillemeur/project-selector/src';
+						  load.
+					  ProjectSelector open ] ]
+		  runOnce: true
 ]
 
 { #category : #'external projects' }
@@ -192,41 +249,80 @@ StartupSettings >> loadVectorGraphicsProject [
 		  runOnce: true
 ]
 
+{ #category : #'external projects' }
+StartupSettings >> maximizePharoWindow [
+
+	^ StartupAction
+		  name: 'Maximize pharo window'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [
+				  Smalltalk currentWorld worldState worldRenderer window maximize ] ]
+		  runOnce: true
+]
+
 { #category : #removing }
 StartupSettings >> previewWindow [
+
 	^ StartupAction
-		name: 'remove preview window'
-		code: [TaskbarMorph showWindowPreview: false]
-		runOnce: true
+		  name: 'remove preview window'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [ TaskbarMorph showWindowPreview: false ] ]
+		  runOnce: true
 ]
 
 { #category : #removing }
 StartupSettings >> removePharoLogo [
-	^StartupAction
-		name: 'remove Pharo logo from desktop'
-		code: [ PolymorphSystemSettings
-				desktopColor: Color gray;
-				showDesktopLogo: false.
-			UITheme currentSettings fastDragging: true ]
-		runOnce: true
+
+	^ StartupAction
+		  name: 'remove Pharo logo from desktop'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [
+					  PolymorphSystemSettings
+						  desktopColor: Color gray;
+						  showDesktopLogo: false.
+					  UITheme currentSettings fastDragging: true ] ]
+		  runOnce: true
 ]
 
 { #category : #removing }
 StartupSettings >> removeWelcomeWindow [
-	^StartupAction
-		name: 'remove welcome window'
-		code: [ World submorphs
-				select: [ :sm | sm isSystemWindow and: [ sm labelString = ((Character value: 0) asString, 'Welcome') ] ]
-				thenDo: [ :window | window delete ] ]
-		runOnce: true
+
+	^ StartupAction
+		  name: 'remove welcome window'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [
+					  World submorphs
+						  select: [ :sm |
+							  sm isSystemWindow and: [
+								  sm labelString = ((Character value: 0) asString , 'Welcome') ] ]
+						  thenDo: [ :window | window delete ] ] ]
+		  runOnce: true
+]
+
+{ #category : #'external projects' }
+StartupSettings >> scaleGuiToolkit [
+
+	^ StartupAction
+		  name: 'scaleGuiToolkit'
+		  code: [
+			  SmalltalkImage current shortImageName = 'GlamorousToolkit.image'
+				  ifTrue: [ BlGlutinHostSpace zoomFactor: 1.25 ] ]
+		  runOnce: true
 ]
 
 { #category : #initialization }
 StartupSettings >> setPersonnalName [
-	^StartupAction
-		name: 'set author name'
-		code: [ Author fullName: 'RenaudDeVillemeur' ]
-		runOnce: true
+
+	^ StartupAction
+		  name: 'set author name'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [ Author fullName: 'RenaudDeVillemeur' ] ]
+		  runOnce: true
 ]
 
 { #category : #initialization }
@@ -342,16 +438,23 @@ source taken from https://github.com/pharo-project/pharo/issues/9715"
 
 { #category : #removing }
 StartupSettings >> updateFont [
-	^StartupAction
-		name: 'update system fonts at startup'
-		code: [ FreeTypeFontProvider current updateFromSystem ]
-		runOnce: true
+
+	^ StartupAction
+		  name: 'update system fonts at startup'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [ FreeTypeFontProvider current updateFromSystem ] ]
+		  runOnce: true
 ]
 
 { #category : #removing }
 StartupSettings >> userLocalDirectory [
+
 	^ StartupAction
-		name: 'set user local directory (for saving code)'
-		code: [SystemResolver userLocalDirectory: FileLocator home / 'devzone']
-		runOnce: true
+		  name: 'set user local directory (for saving code)'
+		  code: [
+			  (SmalltalkImage current shortImageName beginsWith: 'Pharo')
+				  ifTrue: [
+				  SystemResolver userLocalDirectory: FileLocator home / 'devzone' ] ]
+		  runOnce: true
 ]
